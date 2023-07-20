@@ -1,4 +1,6 @@
-module.exports = {
+import "dotenv/config";
+
+const configDB = {
     user: process.env.NODE_ORACLEDB_USER || "hr",
 
     // Get the password from the environment variable
@@ -10,9 +12,12 @@ module.exports = {
 
     // For information on connection strings see:
     // https://node-oracledb.readthedocs.io/en/latest/user_guide/connection_handling.html#connectionstrings
-    connectString: process.env.NODE_ORACLEDB_CONNECTIONSTRING || "192.168.0.232:49161/xe",
+    connectString: process.env.NODE_ORACLEDB_CONNECTIONSTRING || "23.22.180.78:1521/xe",
 
     // Setting externalAuth is optional.  It defaults to false.  See:
     // https://node-oracledb.readthedocs.io/en/latest/user_guide/connection_handling.html#extauth
     externalAuth: process.env.NODE_ORACLEDB_EXTERNALAUTH ? true : false,
-};
+}
+
+export { configDB };
+
