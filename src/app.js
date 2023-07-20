@@ -21,14 +21,30 @@ oracledb.initOracleClient(clientOpts);
 async function selectAllEmployees(req, res) {
   
   let connection;
-  let result;
+  let objRes = [];
   try {
     connection = await oracledb.getConnection(dbConfig);
 
     console.log('connected to database');
     // run query to get all employees
-    result = await connection.execute(`SELECT * FROM employees`);
-
+    const result = await connection.execute(`SELECT * FROM employees`,
+      [], // no bind variables
+      {
+        resultSet: true,             // return a ResultSet (default is false)
+        // fetchArraySize: 100       // internal buffer allocation size for tuning
+      }
+    );
+    
+    const rs = result.resultSet;
+    let row;
+    let i = 1;
+    console.log('result', rs);
+    while ((row = await rs.getRow())) {
+      console.log("getRow(): row " + i++);
+      console.log(row);
+      objRes.push(row);
+    }
+    await rs.close();
     //const rs = result.resultSet;
   } catch (err) {
     //send error message
@@ -43,13 +59,14 @@ async function selectAllEmployees(req, res) {
         console.error(err.message);
       }
     }
-    if (result.rows.length == 0) {
+    console.log('objRes: ', objRes);
+    if (objRes.length == 0) {
       //query return zero employees
       return res.send('query send no rows');
-      } else {
+    } else {
       //send all employees
-      return res.send(result.rows);
-      }
+      return res.send(objRes);
+    }
   }
 }
 
