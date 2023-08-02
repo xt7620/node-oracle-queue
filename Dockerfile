@@ -8,6 +8,8 @@ RUN  yum -y install oracle-release-el7 oracle-nodejs-release-el7 && \
 WORKDIR /myapp
 ADD package.json /myapp/
 ADD src /myapp
+ADD tsconfig.json /myapp/tsconfig.json
 RUN npm install
+RUN npm run build
 
-CMD exec node app.js
+CMD exec node dist/index.js
